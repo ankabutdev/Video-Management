@@ -8,11 +8,11 @@ public interface IProductRepository
 
     Task<Product?> GetByIdAsync(int id);
 
-    Task<bool> CreateAsync(Product entity);
+    Task<int> CreateAsync(Product entity);
 
-    Task<bool> UpdateAsync(Product entity);
+    Task<int> UpdateAsync(Product entity);
 
-    Task<bool> DeleteAsync(int Id);
+    Task<int> DeleteAsync(Product product);
 
     Task<IQueryable<Product>> SearchAsync(string query);
 

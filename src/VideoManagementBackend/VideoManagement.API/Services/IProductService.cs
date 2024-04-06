@@ -16,4 +16,5 @@ public interface IProductService
     Task<bool> DeleteAsync(int Id);
 
     Task<IQueryable<Product>> SearchAsync(string query);
+
 }

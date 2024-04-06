@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Http.Features;
 using VideoManagement.API.Configurations;
+using VideoManagement.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCustomService();
 builder.Services.ConfigureDataAccess(builder.Configuration);
+builder.Services.AddSingleton<FileService>();
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = 1024 * 1024 * 1024;
+});
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 1024 * 1024 * 1024; // 1GB
+});
 
 var app = builder.Build();
 

@@ -16,28 +16,29 @@ public class ProductRepository : IProductRepository
         _context = context;
     }
 
-    public async Task<bool> CreateAsync(Product entity)
+    public async Task<int> CreateAsync(Product entity)
     {
         try
         {
             await _context.Products.AddAsync(entity);
-            return await _context.SaveChangesAsync() > 0;
+            return await _context.SaveChangesAsync();
         }
         catch
         {
-            return false;
+            return 0;
         }
     }
 
-    public async Task<bool> DeleteAsync(int Id)
+    public async Task<int> DeleteAsync(Product product)
     {
         try
         {
-            return await _context.SaveChangesAsync() > 0;
+            _context.Products.Remove(product);
+            return await _context.SaveChangesAsync();
         }
         catch
         {
-            return false;
+            return 0;
         }
     }
 
@@ -51,21 +52,20 @@ public class ProductRepository : IProductRepository
     {
         return _context.Products
             .Where(p =>
-            p.Name.Contains(query) ||
-            p.Description.Contains(query));
+            p.Name.ToLower().Contains(query) ||
+            p.Description.ToLower().Contains(query));
     }
 
-    public async Task<bool> UpdateAsync(Product entity)
+    public async Task<int> UpdateAsync(Product entity)
     {
         try
         {
             _context.Products.Update(entity);
-            await _context.SaveChangesAsync();
-            return true;
+            return await _context.SaveChangesAsync();
         }
         catch
         {
-            return false;
+            return 0;
         }
     }
 }

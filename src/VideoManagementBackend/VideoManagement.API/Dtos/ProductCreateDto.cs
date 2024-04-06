@@ -6,7 +6,6 @@ public class ProductCreateDto
 
     public string Description { get; set; } = string.Empty;
 
-    public IFormFile VideoUrl { get; set; } = default!;
+    public IFormFile Video { get; set; } = default!;
 
-    public int SortNumber { get; set; }
 }

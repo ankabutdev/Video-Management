@@ -8,7 +8,6 @@ public class ProductUpdateDto
 
     public string Description { get; set; } = string.Empty;
 
-    public IFormFile? VideoUrl { get; set; }
+    public IFormFile? Video { get; set; }
 
-    public int SortNumber { get; set; }
 }

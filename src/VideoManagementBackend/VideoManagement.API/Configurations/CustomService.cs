@@ -9,6 +9,5 @@ public static class CustomService
     {
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped<IVideoService, VideoService>();
     }
 }

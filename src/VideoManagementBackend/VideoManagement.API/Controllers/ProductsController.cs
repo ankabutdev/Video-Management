@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VideoManagement.API.Dtos;
 using VideoManagement.API.Services;
+using VideoManagement.API.Validations;
 
 namespace VideoManagement.API.Controllers;
 
@@ -34,9 +35,16 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(ProductCreateDto dto)
+    public async Task<IActionResult> CreateAsync([FromForm] ProductCreateDto dto)
     {
-        return Ok(await _productService.CreateAsync(dto));
+        var validator = new VideoValidator();
+        var check = validator.Validate(dto);
+        if(check.IsValid)
+        {
+            var resultProduct = await _productService.CreateAsync(dto);
+            return Ok(resultProduct);
+        }
+        return BadRequest(check.Errors);
     }
 
     [HttpPut("{Id}")]
@@ -50,4 +58,5 @@ public class ProductsController : ControllerBase
     {
         return Ok(await _productService.DeleteAsync(Id));
     }
+
 }
