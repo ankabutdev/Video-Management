@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="videoclass">
+        <!-- Video Player -->
+        <video controls>
+            <source src="{{data.videoUrl}}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <h1>Name: {{data.name}}</h1>
+
+    <!-- <h1>Description: {{data.description}}</h1> -->
+    <h1>№: {{data.sortNumber}}</h1>
+    <div class="action-buttons">
+        <button (click)="deletee(data.id)" class="delete">Delete</button>
+        <button style="background-color: orange;" [routerLink]="['/update',data.id]" class="update">Update</button>
+    </div>
+</div>

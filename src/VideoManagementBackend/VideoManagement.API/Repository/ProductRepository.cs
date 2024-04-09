@@ -48,6 +48,21 @@ public class ProductRepository : IProductRepository
     public async Task<Product?> GetByIdAsync(int id)
         => await _context.Products.FindAsync(id);
 
+    public async Task<Product?> GetVideoUrlBySortNumberAsync(int sortNumber)
+    {
+        try
+        {
+            return await _context.Products
+                .FirstOrDefaultAsync(
+                x => x.SortNumber == sortNumber);
+
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     public async Task<IQueryable<Product>> SearchAsync(string query)
     {
         return _context.Products

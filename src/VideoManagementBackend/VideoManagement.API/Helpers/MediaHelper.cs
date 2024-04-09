@@ -14,7 +14,7 @@ public static class MediaHelper
 
     public static string[] GetVideoExtensions()
     {
-        return new string[] 
+        return new string[]
         {
             ".mp4",
             ".mkv",
@@ -22,6 +22,12 @@ public static class MediaHelper
             ".mov",
             ".avi",
             ".wmv",
+            ".MP4",
+            ".MKV",
+            ".FLV",
+            ".MOV",
+            ".AVI",
+            ".WMV",
             // you can add more video extensions here
         };
     }

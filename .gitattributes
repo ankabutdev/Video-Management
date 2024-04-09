@@ -1,0 +1,5 @@
+'*.nc' filter=lfs diff=lfs merge=lfs -text
+'*.csv' filter=lfs diff=lfs merge=lfs -text
+'src/VideoManagementBackend/VideoManagement.API/wwwroot/media/videos/VIDEO_713ef8b8-de6a-4de7-8fa8-b5ff61f3fb8f.mkv' filter=lfs diff=lfs merge=lfs -text
+*.mkv filter=lfs diff=lfs merge=lfs -text
+src/VideoManagementBackend/VideoManagement.API/wwwroot/media/videos/VIDEO_713ef8b8-de6a-4de7-8fa8-b5ff61f3fb8f.mkv filter=lfs diff=lfs merge=lfs -text

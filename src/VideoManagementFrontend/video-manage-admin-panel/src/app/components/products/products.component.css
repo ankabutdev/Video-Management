@@ -1,0 +1,90 @@
+/* Header styling */
+.bg-white {
+    background-color: #fff;
+}
+.shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.flex {
+    display: flex;
+}
+.justify-between {
+    justify-content: space-evenly;
+}
+.items-center {
+    align-items: center;
+}
+.px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+.py-6 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+.sm\:px-6 {
+    @apply px-6;
+}
+.lg\:px-8 {
+    @apply px-8;
+}
+.text-3xl {
+    font-size: 1.875rem;
+}
+.font-bold {
+    font-weight: 700;
+}
+.tracking-tight {
+    letter-spacing: -0.025em;
+}
+.text-gray-900 {
+    color: #1a202c;
+}
+
+/* Search box styling */
+.w-58 {
+    width: 20rem;
+}
+.bg-gray-200 {
+    background-color: #edf2f7;
+}
+.border {
+    border-width: 1px;
+    border-color: #e2e8f0;
+}
+.rounded-lg {
+    border-radius: 0.5rem;
+}
+.focus\:outline-none:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+.focus\:bg-white:focus {
+    background-color: #fff;
+}
+.focus\:border-gray-500:focus {
+    border-color: #a0aec0;
+}
+.fill-current {
+    fill: currentColor;
+}
+.ml-2 {
+    margin-left: 0.5rem;
+}
+
+/* Button styling */
+.p-1 {
+    padding: 0.25rem;
+}
+.focus\:shadow-outline:focus {
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+}
+
+.results {
+    display: grid;
+    column-gap: 14px;
+    row-gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adjust min width and fraction */
+    justify-content: space-around;
+}
+

@@ -17,4 +17,6 @@ public interface IProductService
 
     Task<IQueryable<Product>> SearchAsync(string query);
 
+    Task<Product> GetVideoBySortNumberAsync(int sortNumber);
+
 }

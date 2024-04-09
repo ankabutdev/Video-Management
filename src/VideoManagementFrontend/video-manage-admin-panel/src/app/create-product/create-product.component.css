@@ -1,0 +1,50 @@
+/* dialog.component.css */
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.dialog-form {
+    width: 300px; /* Adjust width as needed */
+    position: relative;
+    transform: translateY(-100%);
+}
+
+.dialog-content {
+    display: block;
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.file-input {
+    margin-top: 10px;
+}
+
+.dialog-actions {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.cancel-button {
+    background-color: red;
+    color: white;
+}
+
+.create-button {
+    background-color: green;
+    color: white;
+}

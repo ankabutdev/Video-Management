@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace VideoManagement.API.Dtos;
+﻿namespace VideoManagement.API.Dtos;
 
 public class ProductUpdateDto
 {

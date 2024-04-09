@@ -28,6 +28,12 @@ public class ProductsController : ControllerBase
         return Ok(await _productService.GetByIdAsync(Id));
     }
 
+    [HttpGet("sortNumber/{sortNumber}")]
+    public async Task<IActionResult> GetVideoBySortNumberAsync(int sortNumber)
+    {
+        return Ok(await _productService.GetVideoBySortNumberAsync(sortNumber));
+    }
+
     [HttpGet("search")]
     public async Task<IActionResult> SearchAsync(string search)
     {
@@ -39,7 +45,7 @@ public class ProductsController : ControllerBase
     {
         var validator = new VideoValidator();
         var check = validator.Validate(dto);
-        if(check.IsValid)
+        if (check.IsValid)
         {
             var resultProduct = await _productService.CreateAsync(dto);
             return Ok(resultProduct);

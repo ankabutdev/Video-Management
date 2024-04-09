@@ -1,0 +1,42 @@
+<div class="min-h-full flex flex-col">
+    <div class="con">
+
+        <header class="bg-white shadow flex justify-between items-center px-4 py-6 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900">Videos</h1>
+            <div class="relative flex items-center">
+
+                <input type="text"
+                    class="block w-58 px-4 py-3 pr-10 leading-tight text-gray-900 bg-gray-200 border border-gray-200 rounded-lg focus:outline-none focus:bg-white focus:border-gray-500"
+                    placeholder="Search..."
+                    [formControl]="searchInput">
+
+                <svg class="w-8 h-8 text-gray-600 fill-current ml-2 absolute right-0 top-0 mt-2 mr-2"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                        d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                </svg>
+            </div>
+            <div>
+                <ol>
+                    <li>
+                        <button style="width: max-content; font-size: larger;" mat-raised-button
+                            [routerLink]="'/createProduct'">Create Product</button>
+                    </li>
+                </ol>
+            </div>
+        </header>
+
+    </div>
+    <main class="flex-grow">
+        <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+            <!-- ! PRODUCTS  -->
+            <section class="products__list">
+                <div class="results">
+                    @for (product of productSortList; track product.id) {
+                        <app-product-detail [data]="product"> </app-product-detail>
+                    }
+                </div>
+            </section>
+        </div>
+    </main>
+</div>

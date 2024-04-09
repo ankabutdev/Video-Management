@@ -12,14 +12,19 @@ namespace VideoManagement.API.Services;
 public class ProductService : BlobAccessService, IProductService
 {
     private readonly IProductRepository _repository;
+    private readonly string MEDIA = "media";
+    private readonly string IMAGES = "images";
+    private readonly string VIDEOS = "videos";
+    private readonly string ROOTHPATH;
 
-    public ProductService(IProductRepository repository)
+    public ProductService(IProductRepository repository, IWebHostEnvironment env)
     {
         _repository = repository;
         var credential = new StorageSharedKeyCredential(_storageAccount, _key);
         var blobUri = $"https://{_storageAccount}.blob.core.windows.net";
         var blobServiceClient = new BlobServiceClient(new Uri(blobUri), credential);
         _filesContainer = blobServiceClient.GetBlobContainerClient("task");
+        ROOTHPATH = env.WebRootPath;
 
     }
 
@@ -29,8 +34,22 @@ public class ProductService : BlobAccessService, IProductService
         product.Name = dto.Name;
         product.Description = dto.Description;
 
+        string videoName = MediaHelper.MakeVideoName(dto.Video.FileName);
+
         // this field for video service
-        product.VideoUrl = await this.UploadVideoAsync(dto.Video);
+        product.VideoUrl = await Task.Run(async () =>
+        {
+            return await this.UploadVideoAsync(dto.Video, videoName);
+        });
+
+        FileInfo VideoInfo = new FileInfo(dto.Video.FileName);
+        string subPathVideo = Path.Combine(MEDIA, VIDEOS, videoName);
+        string path = Path.Combine(ROOTHPATH, subPathVideo);
+
+        var stream = new FileStream(path, FileMode.Create);
+        await dto.Video.CopyToAsync(stream);
+        stream.Dispose();
+        stream.Close();
 
         var result = await _repository.CreateAsync(product);
         return result > 0;
@@ -93,16 +112,17 @@ public class ProductService : BlobAccessService, IProductService
             if (!deleteVideo.Error is false)
                 throw new VideoNotFoundException();
 
-            product.VideoUrl = await UploadVideoAsync(dto.Video);
+            string videoName = MediaHelper.MakeVideoName(dto.Video.FileName);
+
+            product.VideoUrl = await UploadVideoAsync(dto.Video, videoName);
         }
 
         var result = await _repository.UpdateAsync(product);
         return result > 0;
     }
 
-    private async Task<string> UploadVideoAsync(IFormFile Video)
+    private async Task<string> UploadVideoAsync(IFormFile Video, string videoName)
     {
-        string videoName = MediaHelper.MakeVideoName(Video.FileName);
 
         //BlobUploadOptions videoUploadOptions = new BlobUploadOptions
         //{
@@ -149,5 +169,12 @@ public class ProductService : BlobAccessService, IProductService
         }
 
         return null;
+    }
+
+    public async Task<Product> GetVideoBySortNumberAsync(int sortNumber)
+    {
+        var result = await _repository.GetVideoUrlBySortNumberAsync(sortNumber);
+        if (result == null) throw new VideoNotFoundException();
+        return result;
     }
 }
