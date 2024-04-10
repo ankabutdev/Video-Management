@@ -7,7 +7,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using VideoSenderBot;
 
-var botClient = new TelegramBotClient("YOUR_TOKEN");
+var botClient = new TelegramBotClient("6702931513:AAF6xid2RjeDeeYc3XSGS4QjE8QtWQ0qVhg");
 
 using CancellationTokenSource cts = new();
 
@@ -68,10 +68,11 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
             var rows = SplitIntoRows(keyboardButtons, 3); // 3 buttons per row
 
             var replyKeyboardMarkup = new ReplyKeyboardMarkup(rows);
+            replyKeyboardMarkup.ResizeKeyboard = true;
 
             var sentMessage = await botClient.SendTextMessageAsync(
                 chatId: chatId,
-                text: "Choose a number",
+                text: "Choose a number.",
                 replyMarkup: replyKeyboardMarkup
             );
 
@@ -96,6 +97,8 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
     catch (Exception ex)
     {
         await Console.Out.WriteLineAsync($"Error: {ex.Message}");
+        var sendm = await botClient.SendTextMessageAsync(
+            chatId: chatId, text: "Not in a correct format!\n\nPlease choose a number.");
     }
 
 }
