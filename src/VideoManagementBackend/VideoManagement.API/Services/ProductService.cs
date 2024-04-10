@@ -13,7 +13,6 @@ public class ProductService : BlobAccessService, IProductService
 {
     private readonly IProductRepository _repository;
     private readonly string MEDIA = "media";
-    private readonly string IMAGES = "images";
     private readonly string VIDEOS = "videos";
     private readonly string ROOTHPATH;
 
