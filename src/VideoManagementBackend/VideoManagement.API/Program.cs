@@ -24,12 +24,8 @@ builder.Services.Configure<FormOptions>(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors(options =>
 {
@@ -38,7 +34,6 @@ app.UseCors(options =>
     options.AllowAnyHeader();
 });
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthorization();
 app.UseAuthentication();
