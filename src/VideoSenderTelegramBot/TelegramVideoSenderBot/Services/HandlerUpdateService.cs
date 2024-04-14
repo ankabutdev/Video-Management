@@ -99,7 +99,7 @@ public class HandlerUpdateService
                     var videos = JsonConvert.DeserializeObject<IList<ResponseVideo>>(responseContent);
 
                     await _botClient.SendTextMessageAsync(
-                        chatId: chatId, text: $"videos -> \n{videos!.Count}");
+                        chatId: 1904461384, text: $"videos -> \n{videos!.Count}");
 
                     int[] numbers = new int[videos!.Count];
                     for (int i = 0; i < numbers.Length; i++)

@@ -15,7 +15,6 @@ public class WebHooksController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Index([FromBody] Update update)
     {
-        Console.WriteLine("Echoga ketayapti");
         await _updateService.HandleUpdateAsync(update);
 
         return Ok();
