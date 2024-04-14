@@ -4,6 +4,8 @@ using TelegramBotVideoSender.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient();
+
 var config = builder.Configuration.GetSection("BotConfiguration").Get<BotConfiguration>();
 builder.Services.AddHttpClient("webhook").AddTypedClient<ITelegramBotClient>(
     httpClient => new TelegramBotClient(config!.Token, httpClient));

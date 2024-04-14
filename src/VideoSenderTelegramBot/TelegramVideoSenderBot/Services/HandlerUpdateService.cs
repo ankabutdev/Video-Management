@@ -1,10 +1,10 @@
-﻿using Refit;
+﻿using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
-using TelegramBotVideoSender.Interfaces;
+using TelegramBotVideoSender.Models;
 
 namespace TelegramBotVideoSender.Services;
 
@@ -12,14 +12,16 @@ public class HandlerUpdateService
 {
     private readonly ILogger<HandlerUpdateService> _logger;
     private readonly ITelegramBotClient _botClient;
-    private IMyRefit _api;
+    private HttpClient _httpClient;
+    private string staticUrl = "https://2352-84-54-80-156.ngrok-free.app";
 
     public HandlerUpdateService(ILogger<HandlerUpdateService> logger,
         ITelegramBotClient botClient)
     {
         _logger = logger;
         _botClient = botClient;
-        _api = RestService.For<IMyRefit>("https://localhost:7265");
+        _httpClient = new HttpClient();
+
     }
 
     public async Task HandleUpdateAsync(Update update)
@@ -33,61 +35,21 @@ public class HandlerUpdateService
 
         var chatId = message.Chat.Id;
 
-        //var handler = update.Type switch
-        //{
-        //    UpdateType.Message => BotOnMessageReceived(update.Message, chatId, messageText),
-        //    _ => UnknownUpdateTypeHandler(update)
-        //};
+
+        var handler = update.Type switch
+        {
+            UpdateType.Message => BotOnMessageReceived(update.Message, chatId, messageText),
+            _ => UnknownUpdateTypeHandler(update)
+        };
 
         try
         {
-            //await handler;
-            if (messageText == "/start")
-            {
-                var resource = await _api.GetAllAsync();
-
-                int[] numbers = new int[resource.LongCount()];
-                for (int i = 0; i < numbers.Length; i++)
-                {
-                    numbers[i] = resource[i].Id;
-                }
-
-                var keyboardButtons = CreateButtons(numbers);
-
-                var rows = SplitIntoRows(keyboardButtons, 3); // 3 buttons per row
-
-                var replyKeyboardMarkup = new ReplyKeyboardMarkup(rows);
-                replyKeyboardMarkup.ResizeKeyboard = true;
-
-                var sentMessage = await _botClient.SendTextMessageAsync(
-                    chatId: chatId,
-                    text: "Choose a number.",
-                    replyMarkup: replyKeyboardMarkup
-                );
-
-                Console.WriteLine($"Message sent with message ID: {sentMessage.MessageId}");
-            }
-            else
-            {
-                int selectednumber = int.Parse(messageText);
-                var data = await _api.GetByIdAsync(selectednumber);
-
-                var videoStream = await DownloadVideoAsync(data.VideoUrl);
-
-                var inputFile = new InputFileStream(videoStream);
-
-                var message1 = await _botClient.SendVideoAsync(chatId, inputFile);
-
-                Console.WriteLine($"Video sent with message ID: {message.MessageId}");
-            }
+            await handler;
         }
         catch (Exception ex)
         {
-            //await HandlerErrorAsync(ex);
-            await _botClient.SendTextMessageAsync(
-            chatId: chatId, text: $"Not in a correct format!\n\nPlease choose a number.\n{ex.Message}");
+            await HandlerErrorAsync(ex);
         }
-
     }
 
     private Task HandlerErrorAsync(Exception ex)
@@ -119,41 +81,76 @@ public class HandlerUpdateService
         {
             if (messageText == "/start")
             {
-                var resource = await _api.GetAllAsync();
+                var response = await _httpClient.GetAsync($"{staticUrl}/api/products");
 
-                int[] numbers = new int[resource.LongCount()];
-                for (int i = 0; i < numbers.Length; i++)
+                await _botClient.SendTextMessageAsync(
+                        chatId: 1904461384, text: $"response -> \n{response.StatusCode}");
+
+                // Check if the response is successful
+                if (response.IsSuccessStatusCode)
                 {
-                    numbers[i] = resource[i].Id;
+                    // Read the content of the response as a string
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    await _botClient.SendTextMessageAsync(
+                        chatId: 1904461384, text: $"responseContent -> \n{responseContent}");
+
+                    // Deserialize the response content into a list of ResponseVideo objects
+                    var videos = JsonConvert.DeserializeObject<IList<ResponseVideo>>(responseContent);
+
+                    await _botClient.SendTextMessageAsync(
+                        chatId: chatId, text: $"videos -> \n{videos!.Count}");
+
+                    int[] numbers = new int[videos!.Count];
+                    for (int i = 0; i < numbers.Length; i++)
+                    {
+                        numbers[i] = videos[i].Id;
+                    }
+
+                    var keyboardButtons = CreateButtons(numbers);
+
+                    var rows = SplitIntoRows(keyboardButtons, 3); // 3 buttons per row
+
+                    var replyKeyboardMarkup = new ReplyKeyboardMarkup(rows);
+                    replyKeyboardMarkup.ResizeKeyboard = true;
+
+                    var sentMessage = await _botClient.SendTextMessageAsync(
+                        chatId: chatId,
+                        text: "Choose a number.",
+                        replyMarkup: replyKeyboardMarkup
+                    );
+
+                    Console.WriteLine($"Message sent with message ID: {sentMessage.MessageId}");
                 }
-
-                var keyboardButtons = CreateButtons(numbers);
-
-                var rows = SplitIntoRows(keyboardButtons, 3); // 3 buttons per row
-
-                var replyKeyboardMarkup = new ReplyKeyboardMarkup(rows);
-                replyKeyboardMarkup.ResizeKeyboard = true;
-
-                var sentMessage = await _botClient.SendTextMessageAsync(
-                    chatId: chatId,
-                    text: "Choose a number.",
-                    replyMarkup: replyKeyboardMarkup
-                );
-
-                Console.WriteLine($"Message sent with message ID: {sentMessage.MessageId}");
+                else
+                {
+                    await _botClient.SendTextMessageAsync(
+                        chatId: chatId, text: "serialize error");
+                }
             }
             else
             {
                 int selectednumber = int.Parse(messageText);
-                var data = await _api.GetByIdAsync(selectednumber);
 
-                var videoStream = await DownloadVideoAsync(data.VideoUrl);
+                var response = await _httpClient.GetAsync($"{staticUrl}/api/products/{selectednumber}");
 
-                var inputFile = new InputFileStream(videoStream);
+                // Check if the response is successful
+                if (response.IsSuccessStatusCode)
+                {
+                    // Read the content of the response as a string
+                    var responseContent = await response.Content.ReadAsStringAsync();
 
-                var message1 = await _botClient.SendVideoAsync(chatId, inputFile);
+                    // Deserialize the response content into a list of ResponseVideo objects
+                    var data = JsonConvert.DeserializeObject<ResponseVideo>(responseContent);
 
-                Console.WriteLine($"Video sent with message ID: {message.MessageId}");
+                    var videoStream = await DownloadVideoAsync(data!.VideoUrl);
+
+                    var inputFile = new InputFileStream(videoStream);
+
+                    var message1 = await _botClient.SendVideoAsync(chatId, inputFile);
+
+                    Console.WriteLine($"Video sent with message ID: {message.MessageId}");
+                }
             }
         }
         catch
