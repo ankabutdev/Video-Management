@@ -125,7 +125,7 @@ public class HandlerUpdateService
                 else
                 {
                     await _botClient.SendTextMessageAsync(
-                        chatId: chatId, text: "serialize error");
+                        chatId: 1904461384, text: "serialize error");
                 }
             }
             else
